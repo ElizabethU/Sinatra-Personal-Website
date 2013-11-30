@@ -22,7 +22,6 @@ h1 {
 }
 
 ul.outer-menu {
-  background-color: #FFFFFF;
   color: #000000;
   font-size: 20px;
   opacity: 0.9;
@@ -32,7 +31,7 @@ ul.outer-menu {
 ul.outer-menu li {
   display: inline-block;
   position: relative;
-  padding: 30px;
+  padding-left: 60px;
   size: 30px; /*Not working*/
   margin: 0px;
 }
@@ -45,6 +44,8 @@ ul.outer-menu, ul.outer-menu ul {
 ul.outer-menu ul.dropdown {
   display: none;
   position: absolute;
+  background-color: #DDEEFF;
+  size: 10px; /*Not working*/
 }
 
 ul.outer-menu ul.dropdown li {
@@ -62,7 +63,12 @@ ul.outer-menu li:hover ul {
   display: block;
 }
 
-
-
-
-
+.button {
+  width: 125px;
+  height: 70px;
+  padding: 10px;
+  vertical-align: middle; /*not working*/
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}

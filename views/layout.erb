@@ -8,7 +8,9 @@
   <ul class="outer-menu">
     <li>Blog
       <ul class="dropdown">
-        <li class="button">Blog posts go here hopefully</li>
+        <% @sorted_posts.each do |post, date_array| %>
+        <li class="button"><a href="/blog/<%= post %>"><%= post %></a></li>
+      <% end %>
       </ul>
     </li>
     <li>Projects
