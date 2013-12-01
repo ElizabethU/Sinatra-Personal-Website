@@ -31,8 +31,8 @@ ul.outer-menu {
 ul.outer-menu li {
   display: inline-block;
   position: relative;
-  padding-left: 60px;
-  size: 30px; /*Not working*/
+  padding-left: 100px;
+  font-size: 24px; /*Not working*/
   margin: 0px;
 }
 
@@ -45,30 +45,49 @@ ul.outer-menu ul.dropdown {
   display: none;
   position: absolute;
   background-color: #DDEEFF;
-  size: 10px; /*Not working*/
+  padding-left: -30px;
+  left: 75px;
 }
 
 ul.outer-menu ul.dropdown li {
   display: block;
   margin: 0;
   padding: 5px;
+  font-size: 14px; /*Not working*/
+  vertical-align: middle; /*not working*/
 }
 
-ul.outer-menu ul.dropdown li:hover {
+/*ul.outer-menu ul.dropdown li:hover {
   background-color: #FFFFFF;
   opacity 0.9;
-}
+}*/
 
 ul.outer-menu li:hover ul {
   display: block;
 }
 
+.floater {
+  float: left;
+  height: 50%;
+  margin-bottom: -40px;
+}
+
 .button {
+  clear: both;
   width: 125px;
-  height: 70px;
+  height: 80px;
+  position: relative;
   padding: 10px;
   vertical-align: middle; /*not working*/
   text-align: center;
   font-weight: bold;
   font-size: 16px;
+  text-transform: capitalize;
+}
+
+.post_content {
+  background-color: #DDEEFF;
+  width: 600px;
+  margin: 50px auto;
+  padding: 30px;
 }

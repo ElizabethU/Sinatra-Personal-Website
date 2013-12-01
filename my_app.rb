@@ -18,7 +18,7 @@ class MyApp < Sinatra::Base
   get "/blog/:post_name" do
     html = erb("posts/#{params[:post_name]}".to_sym, layout: false,)
     html = html.split("\n\n", 2).last
-    erb html
+    erb html, :locals => { :its_a_post => true }
   end
 
   def meta_data

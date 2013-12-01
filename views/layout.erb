@@ -4,22 +4,10 @@
   <title>Elizabeth Uselton</title>
 </head>
 <body>
+  <% its_a_post = false if its_a_post.nil? %>
   <h1>Elizabeth Uselton</h1>
-  <ul class="outer-menu">
-    <li>Blog
-      <ul class="dropdown">
-        <% @sorted_posts.each do |post, date_array| %>
-        <li class="button"><a href="/blog/<%= post %>"><%= post %></a></li>
-      <% end %>
-      </ul>
-    </li>
-    <li>Projects
-      <ul class="dropdown">
-        <li class="button"><a href="http://elizabeth-sinatra.herokuapp.com">Totally Legit Horoscopes</a></li>
-        <li class="button">Sassy Python Game</li>
-        <li class="button">Ada Developers Academy Webring</li>
-      </li>
-    </ul>
-  </ul>
-  <%= yield %>
+  <%= erb :menu %>
+  <% post_data = yield %>
+  <%= erb(:post_layout, :locals => {post: post_data}) if its_a_post %>
+  <%= post_data unless its_a_post %>
 </body>
