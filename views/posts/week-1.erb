@@ -1,18 +1,31 @@
 date: 2013-11-02
 
 
+<p>
 I am one week into Ada Developer’s Academy, and I am already dreaming about code. With how much time we’re all putting in, this actually isn’t surprising. What is surprising, is that when I say dreaming about code, I mean real working code, not getting in a fight with github or something. When I get up, the code still seems like a good, working idea. I guess thinking about something all day every day will do that to you.
+</p>
 
+<p>
 Basically, Ada is awesome. The first thing that’s apparent is that everybody’s whip smart. Even when someone’s not sure what’s going on, the quality of questions out of everyone’s mouth let’s you see the wheels turning, testing metaphors and already predicting uses for the skills we’re learning. The second thing that’s apparent is that people are interested in learning, not in being the smartest person in the room. There’s this great collaborative push and pull of “Let me see that…”, “how did you…?”, with a good dose of “Let me show you this part I’m really proud of.” No one’s wasting their energy ranking themselves, or cutting anyone else down. I hope we keep that up. I don’t want to imply that women are intrinsically less competitive or gentler people, because I have known many a competitive woman, but I think one of the characteristics the powers that be were looking for in students was the ability to play nice with others.
+</p>
 
+<p>
 I took a Python class over the summer, put a lot of time into it, and completely aced it. I’m no expert, but I had started to feel comfortable with it, and even surprised people a few times by finding a new simpler way to do something. I’ve been familiar with most of the structure we’ve gone over this week, which I feel like has been a tremendous advantage, but git and bash are still new, as are hot keys on a mac. This has led to me feeling like I’m really in my element when I’m actually writing Ruby, despite some new syntax, but whenever we’re doing anything else, I’m extremely impatient because I want to know all the things right away. Mostly I’ve been coping by making Linus Torvald advice animals.
+</p>
 
+<p>
 Nonetheless, git and github are taking shape in my brain, and I am taking smug satisfaction in the fact that I may know more about bash at this point than my software developer brother. This is particularly sweet since he used to help me navigate DOS when I was like 5 or 6.
+</p>
 
+<p>
 I actually wish we had a little more time to just freeform mess with our code, but I’m guessing as we get through the basics, that will happen.
+</p>
 
+<p>
 My favorite function I have built all week:
+</p>
 
+<p>
 def is_it_an_integer(num)
   if num.to_f.to_i == num.to_f
     return num.to_i
@@ -20,9 +33,16 @@ def is_it_an_integer(num)
     return num.to_f
   end
 end
+</p>
 
+<p>
 It’s for a little calculator program. I wanted to retain the accuracy of adding floats, but I didn’t want it saying 3.0 when it could say 3. This program is so simple I’d rather have pretty formatting than significant figures. So, basically this program checks if the input as a float is the same as the input as an integer, then returns the integer or float as appropriate. I could have also done something with seeing if the num.to_f % 1 == 0, but that seemed less elegant. This seems like the easiest, most elegant way to do this with the tools I know. I’ve made way bigger, more grandiose projects at this point, but I find that I’m frequently the happiest when I find a way to get around big grandiose things and get to the heart of the problem.
+</p>
 
+<p>
 I could also cut out all the ‘.to_f’, if I just made sure to read input in as floats, but I hadn’t decided how to check against the input being text yet, so I decided to leave those in, lest I change another part and forget later.
+</p>
 
+<p>
 Another thing we worked on this week was a Zork style text adventure game, which was fun for me because 1. I love old video games and 2. I hadn’t really worked with classes and object much. I definitely need to work on my understanding of scope until it’s totally automatic. I’m really excited to learn more on this so I can soup up my game and add elements in a way that is in keeping with Ruby’s object oriented approach, rather than just miscellaneous code in small functions. Right now it’s just a couple of rooms, the ability to move between them, an Elder Scrolls inspired player start up sequence of flavor text, but soon, more objects, more features, and (always) more silly flavor text. Then once I learn how to work some GUI or other, I’ll add that, and have a King’s Quest / Monkey Island game style. I have the best idea for a game. I told it to my interviewers, and they all laughed, and now I’m in a competitive program, so you know it must be good. I’ll let you all play it, and talk about how good it is, you know, once I learn all the things and suddenly have free time to pursue outside projects.
+</p>
