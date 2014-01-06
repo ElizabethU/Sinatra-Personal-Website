@@ -1,0 +1,32 @@
+date: 2013-12-14
+
+
+<h4>How to build a better shopping cart</h4>
+
+<p>So, this last week my group and I have been working on a totally-not-Amazon website to buy and sell products. We had most of our site up and running, and were peaking over at how other groups were doing their carts. It needed a join table, we knew that. Orders had many products, and products had many orders. But how to associate it all. By user id? What if a user was not signed in? The cart would change and empty when you signed in, leaving this pending order stuck in the database, userless, checkoutless, forever. More importantly, it would disrupt the browsing experience. If people lost all the things they’d put in their cart when they signed in, what are the chances they’d remember them all again? That’s a frustrating user experience, and lost sales.</p>
+
+<p>“That’s how a lot of sites are,” someone said. “I think it’s okay. Sites like that exist, for real businesses.”</p>
+
+<p>“No,” I frowned. “There’s got to be a better way!”</p>
+
+<p>Luckily, earlier that week I had been working on the user authentication portion of the website, which I totally would not have figured out without <a href="http://railscasts.com/episodes/270-authentication-in-rails-3-1">this video</a>.</p>
+
+<p>The gist is that much like the params hash, Rails knows about a thing called the sessions hash. On the most basic level of understanding, the params hash is a way to store information about what’s going on in this webpage, values entered, that have been passed to the controller by get or post methods. The sessions hash is much the same idea, but is used specifically for storing data about states that you wish to save during that session.</p>
+
+<p>The video I link to about contains instructions on how to use the session hash to create a “current user” by having the key user_id within the session hash have a value of the user.id of the user whose information was provided to sign in.</p>
+
+<p>I had the idea to do this for the current order, which we were using synonymously with the cart, and embarrassingly enough thought we would have to create a new controller for it. After talking with Bookis, I rectified my understanding: I did not need a second controller for this matter, and could just define new methods in the order or session controller (On your second Rails app, you’re not really clear what things you haven’t done because you’ve only made one Rails app, and what things you haven’t done because they won’t work.)</p>
+
+<p>To make a cart like this, we chose to create a new cart/order the moment you try to put an item into an empty cart. Then the primary key of the order is retrieved and assigned to the session[:order_id].</p>
+
+<ol>So the code needed to make a functional cart this way:
+  <li>Code creating a new order when an item is put in an empty cart</li>
+  <li>Code setting the session[:order_id] when a new order is created</li>
+  <li>Code setting the user id of the order to the current user, if a user is logged in at the time of order creation</li>
+  <li>Code assigning the current user to the user id of the order when a user logs in with an open order</li>
+  <li>Code which, upon log in, loads any open order with the user id as the current user, provided there are no items in the cart.</li>
+  <li>Code which, upon log in, combines the items in any open order that has the user id as the current user, if there are items in the cart.</li>
+</ol>
+
+<p>Items 3 and 4 are necessary to associate orders and users, which will come in handy for user history later. Items 5 and 6 may be considered extra credit, but will allow a user’s cart to follow them from device to device.</p>
+
