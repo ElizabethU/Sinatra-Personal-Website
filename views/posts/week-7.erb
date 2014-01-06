@@ -1,7 +1,7 @@
 date: 2013-12-14
 
 
-<h4>How to build a better shopping cart</h4>
+<h3>How to build a better shopping cart</h3>
 
 <p>So, this last week my group and I have been working on a totally-not-Amazon website to buy and sell products. We had most of our site up and running, and were peaking over at how other groups were doing their carts. It needed a join table, we knew that. Orders had many products, and products had many orders. But how to associate it all. By user id? What if a user was not signed in? The cart would change and empty when you signed in, leaving this pending order stuck in the database, userless, checkoutless, forever. More importantly, it would disrupt the browsing experience. If people lost all the things they’d put in their cart when they signed in, what are the chances they’d remember them all again? That’s a frustrating user experience, and lost sales.</p>
 
@@ -19,7 +19,8 @@ date: 2013-12-14
 
 <p>To make a cart like this, we chose to create a new cart/order the moment you try to put an item into an empty cart. Then the primary key of the order is retrieved and assigned to the session[:order_id].</p>
 
-<ol>So the code needed to make a functional cart this way:
+<ol><p>So the code needed to make a functional cart this way:<p>
+
   <li>Code creating a new order when an item is put in an empty cart</li>
   <li>Code setting the session[:order_id] when a new order is created</li>
   <li>Code setting the user id of the order to the current user, if a user is logged in at the time of order creation</li>
