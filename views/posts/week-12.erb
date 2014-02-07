@@ -1,0 +1,28 @@
+date: 2014-02-06
+
+
+<p>Good news! Today I’m going to teach you about cron, a job scheduler I figured out while working on my twitterbots. What does it mean to be a job scheduler? Almost exactly what it sounds like. A job scheduler is an application in your computer that handles programs on a specific schedule. So, if you want to set a recurring time for a program to run, this is the process for you!</p>
+
+<p>The first thing to know about cron is it lives on your computer, not a thing you call in your Ruby program or in whatever other program you’re working on. You can call the cron process from any directory. To set a recurring task type “crontab -e”. The ‘e’ is for ‘edit’. The ‘tab’ is for ‘table’. The ‘cron’ is for ‘cronological’, which is from the Greek Titan ‘Kronos’.</p>
+
+<p>Having typed that in, you are now in your cron in Vim. Vim is a text editor you may not have used before. But don’t worry, I’ll walk you through it. The weirdest thing about Vim (that I know of so far) is that when you open something in it, you are just in a view mode. Press ‘i’ to tell it you are ready to insert things. You can still scroll through with the arrow keys while in insert mode, but can also edit your file. Ignore all the ‘~’ on the side of the file. They’re another weird thing about Vim, but they’re not messing with you, and they’re perfectly normal.</p>
+
+<p>Now what does one write in a cronlog? There’s a specific format, depending on what you want done. The basic instructions will always look something like this:</p>
+
+<p>* * * * *  echo “Hello world!” >> ~/cronlog.txt </p>
+
+<p>This particular code prints the phrase hello world to a text file called cronlog once every minute. The five stars are respectively minutes (0-59), hours (0-23), day of month (1 - 31), month (1 - 12), and day of the week (0-6, starting with Sunday). The star means “all”. Think of it like the ‘.’ in ‘subl .’</p>
+
+<p>To schedule a job that would send you an email reminder to get a tally for Ada Developer’s Academy Happy Hour at 4 pm every Friday, for example, the code would read:</p>
+
+<p>0 16 * * 5 ruby some_program_that_sends_email.rb</p>
+
+<p>As you can see, the specifications match Friday at 4. We specify the minutes as 0 rather than leaving them blank as all because we don’t want to be sent an email every minute for the entire hour Friday afternoon between 4 and 5. The text after the numbers is just the same as the command you would put in the command line to run the process yourself.</p>
+
+<p>Another way you can user crontab is to specify every so often. */n, where n is a number will specify that an action should happen every n of whatever unit of time the star represents. For example, the cronjob for my twitterbot Kathy Butler, who runs every hour, was:</p>
+
+<p>*/60 * * * * ruby biggestfan.rb</p>
+
+<p>Naturally, biggestfan.rb is the name of the ruby file that Kathy lives in, because she is your biggest fan. As you can see, she runs every hour, every day, every month, and every day of the week, every 60 minutes.</p>
+
+<p>Now that you know how to make your own cronjobs, you’re probably left with one question: How do I get out of Vim? Press Esc to exit insert mode. Now type ‘:wq’ to write and quit. You’ll see them appear in the bottom left hand corner of your terminal. To just quit, without saving (writing) type ':q'. You will not be able to just quit if you have made changes, so show Vim you are serious by specifying ':q!' if you want to quit without saving. Happy cronjobbing!</p>
