@@ -1,0 +1,27 @@
+date: 2014-02-13
+
+
+<p>Today, as a throwback, I just want to talk about join tables. In class, we’ve been making join tables since late November, early December, maybe,  but I actually hadn’t made one in an embarrassing amount of time before the project I’m currently on. And when I said “Hey, I think we need a join table”, everyone around me groaned.</p>
+
+<p>Let me lay out what a join table is, and some real examples of times where it is your friend, not a thing to fear, and it will really help you out.</p>
+
+<p>So, what happens when we need to connect two models? If one has many of the other, like a user with many blog posts, you can just add a user_id column to the model. Then add belongs_to :user to the post model, and has_many :posts to the user model. But what if you have a more complicated relationship? What if many things belong to many other things?</p>
+
+<p>Let’s say I was making a database of superheroes. So “superhero identity” is a model, belonging to a “person”. So, Clint Barton is a person, who the “superhero identity” Hawkeye belongs to. Open and shut, right? Well… not exactly. See, Clint Barton also worked under the name “Ronin” for a while. So “Clint Barton” has_many :superhero_identities. Still easy. Except for former Young Avenger Kate Bishop, who also goes by Hawkeye… and the time Norman Osborn took over SHIELD and recruited Daredevil villain Bullseye to be Hawkeye on the Dark Avengers. And let’s not even start on Hank Pym’s various alter egos (and the additional Ant-Men).</p>
+
+<p>So, we need a many to many relationship. Since we can’t have an array stored in a column of a model, how will we save all those relationships? Enter the join table. A join table has the following columns: an id, which is just the primary key you’ll call it by, the id of the instance of the first model you want to connect, and the id of the instance of the second model you want to connect. For example, if you wanted a line to represent Carol Danver’s move to being Captain Marvel, not Ms. Marvel, and also not to represent Monica Rambeau’s time as Captain Marvel, we’d have a join table item that went:</p>
+
+<p>{ id: 5, superhero_identity: cpt_marvel.id, person: carol_danvers.id }</p>
+
+<p>Another tip I’d like to share about join tables (and other :has_many relationships) is that sometimes you have a case where you want just one relationship with both attributes. In my case, I only want one Carol Danvers - Captain Marvel relationship. Normally I would just put</p>
+<p>validates :superhero_identity, uniqueness: true</p>
+
+But I don’t want the superhero identity to be unique. I need to have several of them for all the different people who’ve used that identity. But I don’t want to save redundant data.
+
+<p>validates :superhero_identity, uniqueness: { scope: :person, message: ‘We don’t need to record a person’s stint as a superhero twice“ }</p>
+
+For a less silly example, and not on a join table, I used that same code recently in a simple app making lists of lists. I didn’t want people putting a redundant item on a list, but I did want two different lists to be able to list the same thing. Maybe I’d need “orange” on a grocery list, and also on a list of favorite colors.
+
+<p>validates :item, uniqueness: { scope: :list, message: "You already put that item on the list."}</p>
+
+It’s a little more clear there, for those unfamiliar with comics. We are making the item unique, within the scope of the list.
