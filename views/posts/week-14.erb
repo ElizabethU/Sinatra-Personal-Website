@@ -1,0 +1,76 @@
+date: 2014-02-22
+
+
+<h3>That One Time I Passed The Turing Test with only Three Months Programming Experience</h3>
+
+<p>So, I finally did the big reveal for my twitterbot on at February’s SeattleRB meeting. I’m happy to announce none of my classmates suspected that the woman who’d been liking all their posts and retweeting so many things was a robot. My friend Kathleen, who was a great help to me in setting up my amazon EC2 server on which I host my twitterbots, actually took a video, so here is a video of my first lightning talk.</p>
+
+<iframe width="560" height="315" src="//www.youtube.com/embed/AyO6iE6eIpc" frameborder="0" allowfullscreen></iframe>
+
+<p>I’ve talked a little about various aspects of my twitterbots, from specifics of how to set up a cronjob, to my evil plans. Today I thought I’d do a more technical approach. My twitterbot is currently available on <a href=”https://github.com/ElizabethU/The-Biggest-Fan”>github</a>, but the code is a little complex, so I’ll go over some of what I think are the most interesting parts.</p>
+
+<p>One of the most common questions I get about her is how she tweets such convincing things. Kathy comes off like a boring person with no clue how to use social media, but definitely a human. It’s immediately clear that it’s not random words. People ask me if I write them all myself. People with more computer science backgrounds ask if they’re Markov Chains, randomly generated but with sophisticated natural language processing to determine what next word is most probable. The truth is much more mundane, but I maintain it’s the best way to do it. </p>
+
+<p>I create a list of words, mostly nouns that describe interests, place them in a text file and then have them read in. I take a sample from that list, and then search for tweets using that word. The array is ugly, but necessary to iterate over them later.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf"><span style="color:#596380">@topic</span>     = <span style="color:#8a4b66">File</span>.read(hobbies).split(<span style="color:#805978">"<span style="color:#a8885a">\n</span>"</span>).sample
+
+def <span style="color:#6078bf">get_some_tweets</span>
+  tweet_array = []
+    <span style="color:#596380">@client</span>.search(<span style="color:#805978">"#{<span style="color:#596380">@topic</span>} -rt"</span>, {<span style="color:#a8885a">:lang</span> => <span style="color:#805978">"en"</span>, <span style="color:#a8885a">:since_id</span> => <span style="color:#596380">@recent_tweet</span>, <span style="color:#a8885a">:result_type</span> => <span style="color:#805978">"recent"</span>}).each do |<span style="color:#596380">t</span>|
+    tweet_array &lt;&lt; t
+  end
+  tweet_array
+end
+</pre>
+
+<p>Then, I read in a list of undesirable words, which include the words you’d think of, and the @ character (since we don’t want to bother any real people with our tweets, especially when they’d wonder why they’d just had the same thing tweeted at them by two people) and also includes twitter urls, since they just link to other people’s pictures.</p>
+
+<p>Then, we filter out those words and grab a tweet. Kathy then has an adjustable chance of saying the text of the tweet. So they all look like things real people could say, because they’re all things real people have said.</p>
+
+
+<pre style="background:#0d0d0d;color:#dde6cf">  def <span style="color:#6078bf">bad_words</span>
+    <span style="color:#596380">@bad_words</span> ||= <span style="color:#8a4b66">File</span>.read(<span style="color:#805978">'badwords.txt'</span>).split(<span style="color:#805978">"<span style="color:#a8885a">\n</span>"</span>)
+  end
+
+<span style="color:#473c45">  # Checks for undesirable words in tweets</span>
+  def <span style="color:#6078bf">contains_stop_list?</span>(<span style="color:#596380">text</span>)
+    bad_words.each do |<span style="color:#596380">bad_word</span>|
+      return <span style="color:#a8885a">true</span> if text.include?(bad_word)
+    end
+    
+    <span style="color:#a8885a">false</span>
+  end
+
+<span style="color:#473c45">  # Filters tweets based on undesirable words, then selects one</span>
+  def <span style="color:#6078bf">filter_tweets</span>(<span style="color:#596380">array</span>)
+    array.reject{ |<span style="color:#596380">tweet</span>| contains_stop_list?(tweet.text) }.first
+  end
+</pre>
+
+<p>Then, we filter out those words and grab a tweet. Kathy then has an adjustable chance of saying the text of the tweet. So they all look like things real people could say, because they’re all things real people have said.</p>
+
+<p>A question I don’t get asked a lot is why Kathy finds that tweet before she’s even run the percent chance that she’s going to say it. Maybe people think it’s just poor planning, maybe they don’t think of it. The real reason has to do with what I find to be the most annoying part of making a twitterbot that replies to things. When I specify that I want it to wake up and favorite 80% of someone’s tweets, I don’t really mean 80% of everything. I mean 80% of everything since last time. So how do I say to stop looking back? The answer is the since_id. The since_id is an optional search parameter that accepts a tweet id and tells the search function to stop looking when tweet ids fall below that number.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">  <span style="color:#596380">@recent_tweet</span>  = last_time(last_thought)
+
+  def <span style="color:#6078bf">last_time</span>(<span style="color:#596380">last_thought</span>)
+    last_thoughts_file = <span style="color:#8a4b66">File</span>.read(last_thought).strip
+
+    if last_thoughts_file.length > <span style="color:#a8885a">0</span>
+      last_thoughts_file 
+    else 
+      <span style="color:#596380">@client</span>.user_timeline(<span style="color:#596380">@client</span>.user.screen_name).first.id
+    end
+  end
+
+  def <span style="color:#6078bf">get_targets_tweets</span>(<span style="color:#596380">who</span>)
+    <span style="color:#596380">@client</span>.user_timeline(who, <span style="color:#a8885a">since_id:</span> <span style="color:#596380">@recent_tweet</span>, <span style="color:#a8885a">include_rts:</span> <span style="color:#a8885a">false</span>)
+  end
+
+
+</pre>
+
+<p>The tweet Kathy collects does double duty as this id. Whether or not she tweets it, she saves the id in a text file so it can persist through the next initialization of the twitterbot, and act as a backstop of sorts. If the file is empty, I have it set to default to the most recent tweet of the bot.</p>
+
+<p>Feel free to fork and play around with Kathy, and tweet at me with any questions.</p>
