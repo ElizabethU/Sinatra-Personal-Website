@@ -1,0 +1,83 @@
+date: 2014-03-03
+
+
+<h3>Refactoring</h3>
+
+<p>On one of the last days of our our Pea Patch project, I came back to class after meeting with my mentor.</p>
+
+<p>“How’s it going?” I asked my programming partner, Anne Kimsey.</p>
+
+<p>Anne and I have worked together on previous projects, and we generally click really well. I have a high level of trust in Anne, she gets things done, and while we don’t usually pair really closely (when we do that works well too), we check in and make sure we both understand what the other is working on and each other’s code when it’s time to check in. So, when Anne turned to me, an intense look in her eyes, and blurted “In the last hour I downloaded the <a href= 
+“http://ruby.sadi.st/Flog.html”>flog and flay gems</a>, and now we’re going to let them evaluate our code,” I pursed my lips and nodded.</p>
+
+<p>“It’s the second to last day of the project,” I pointed out. “What if it says our code is bad?”</p>
+
+<p>“Well then we’ll fix it.”</p>
+
+<p>“Oh. Ok,” I glanced around nervously. I hadn’t heard anyone else talking about refactoring. We were in pretty good shape. We’d got all the base requirements done, and some of the stretch goals. I was pretty sure I knew how to implement the stretch goals we hadn’t implemented, while I was very sure I had no idea how to refactor our code.</p>
+
+<p>That definitely made refactoring the more valuable undertaking.</p>
+
+<p>We’ve gotten to a point in the program where we can almost always cobble a thing together and make it work. It’s definitely time to start focusing in and making our code better. So what does better look like? While no match for a code review with a real human who knows what they’re doing, Flog and Flay are great tools for reducing code complexity and redundancy. It’s very satisfying to have such immediate feedback, especially when you are in a position where you don’t always know what best practices are.</p>
+
+<p>Flog is a command line tool, which means you don’t have to put it in your gemfile. Just install it on the command line using sudo gem install flog.</p>
+
+<p>According to the flog website you then have to use the fairly unparsable hard to remember “find lib -name \*.rb | xargs flog”. You don’t. Don’t do that. You’ll never remember it. Instead, go into the directory for the Rails app you want to look at, then just run “flog app/controllers/” to look at the controllers, or “flog app/models/” to look at the models.</p>
+
+<p>Flog will display a list of the worst methods with their scores, and which controller or model they belongs in, as well as an average score per method. This is like golf: low scores are better. The score is the amount of work in terms of calculations the program must perform. While, as Sandi Metz drove home at a recent talk, refactoring can make things look worse before it get better, it’s very helpful for a beginner to get pointed in the directions of what is in need of refactoring, and to remember the single responsibility principle.</p>
+
+<p>Anne and I ended up spending a good 8 hours just refactoring .Here’s an example of one of Anne and my methods before:</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">  def <span style="color:#6078bf">edit</span>
+    <span style="color:#596380">@tool</span> = <span style="color:#8a4b66">Tool</span>.find(params[<span style="color:#a8885a">:id</span>])
+    if <span style="color:#596380">@current_user</span>.try(<span style="color:#a8885a">:admin</span>)
+      render <span style="color:#a8885a">:edit</span>
+    elsif <span style="color:#596380">@current_user</span> 
+      flash[<span style="color:#a8885a">:notice</span>] = <span style="color:#805978">"You must be signed in as an admin to edit a tool"</span>
+      redirect_to tools_path
+    else
+      flash[<span style="color:#a8885a">:notice</span>] = <span style="color:#805978">"You must be signed in as an admin to edit a tool"</span>
+      redirect_to sign_in_path
+    end
+  end
+
+  def <span style="color:#6078bf">update</span>
+    <span style="color:#596380">@tool</span> = <span style="color:#8a4b66">Tool</span>.find(params[<span style="color:#a8885a">:id</span>])
+    if <span style="color:#596380">@tool</span>.update(tool_params)
+      redirect_to tools_path
+      flash[<span style="color:#a8885a">:notice</span>] = <span style="color:#805978">"Tool updated!"</span>
+    else
+      render <span style="color:#a8885a">:new</span>
+      flash[<span style="color:#a8885a">:notice</span>] = <span style="color:#805978">"Something went wrong. :("</span>
+    end
+  end
+
+</pre>
+
+
+<p>And after:</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">  before_action <span style="color:#a8885a">:check_for_sign_in</span>, <span style="color:#a8885a">only:</span> [<span style="color:#a8885a">:new</span>, <span style="color:#a8885a">:edit</span>, <span style="color:#a8885a">:destroy</span>]
+  before_action <span style="color:#a8885a">:set_tool</span>, <span style="color:#a8885a">only:</span> [<span style="color:#a8885a">:show</span>, <span style="color:#a8885a">:edit</span>, <span style="color:#a8885a">:update</span>, <span style="color:#a8885a">:destroy</span>]
+
+  def <span style="color:#6078bf">edit</span>
+    if <span style="color:#596380">@current_user</span>.admin
+      render <span style="color:#a8885a">:edit</span>
+    else
+      flash[<span style="color:#a8885a">:notice</span>] = <span style="color:#805978">"You must be signed in as an admin to edit a tool"</span>
+      redirect_to tools_path
+    end
+  end
+
+  def <span style="color:#6078bf">update</span>
+    if <span style="color:#596380">@tool</span>.update(tool_params)
+      redirect_to tools_path
+      flash[<span style="color:#a8885a">:notice</span>] = <span style="color:#805978">"Tool updated!"</span>
+    else
+      render <span style="color:#a8885a">:new</span>
+      flash[<span style="color:#a8885a">:notice</span>] = <span style="color:#805978">"Something went wrong. :("</span>
+    end
+  end
+</pre>
+
+<p>As you can see, extracting checking if someone is signed in, and checking if they are an admin have been extracted into helper methods. Much better.</p>
