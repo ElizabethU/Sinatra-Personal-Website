@@ -1,0 +1,74 @@
+<h3>Using the Magic of Mechanize</h3>
+
+<p>This week I figured out how to use the gem “mechanize” to not only scrape data, but submit forms for me. Speaking with one of the maintainers, I have confirmed that it is in fact black magic. </p>
+
+<p>Mechanize is a gem that automates your interactions with web browsers. If you’ve made a website or two, especially a website with a form for this example, it is a little shocking how familiar this all looks.</p>
+
+<p>First, you have to install and require mechanize</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">gem install <span style="color:#805978">'mechanize'</span>
+require <span style="color:#805978">'mechanize'</span>
+</pre>
+
+<p>I am using mechanize to scrape some NASA data. NASA has great data, but is not great at giving it to you in not horrible formats.</p>
+
+<p>First, I initialize a new agent, and use it to get the page I want.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">agent = <span style="color:#8a4b66">Mechanize</span>.new
+
+page = agent.get(<span style="color:#805978">'http://omniweb.gsfc.nasa.gov/coho/helios/heli.html'</span>)
+</pre>
+
+<p>That’s it, just like using HTTParty, we now have the page! Let’s check it out with “pp”, a command I learned from my classmate Christina, which still blows my mind. “pp” stands for “pretty puts”, so when you want to view something in your console like a webpage or a giant horrible hash, pp will parse it so you have at least some hope of reading it.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf"> {forms
+  <span style="color:#473c45">#&lt;Mechanize::Form</span>
+   {name nil}
+   {method <span style="color:#805978">"POST"</span>}
+   {action <span style="color:#805978">"/cgi/models/helios1.cgi"</span>}
+   {fields
+    [text:0x3fe12e1500dc <span style="color:#8a4b66">type</span>:  name: start_year value: 2000]
+    [text:0x3fe12e13be34 <span style="color:#8a4b66">type</span>:  name: start_day value: 001]
+    [text:0x3fe12e13bb14 <span style="color:#8a4b66">type</span>:  name: stop_year value: 2011]
+    [text:0x3fe12e13b8e4 <span style="color:#8a4b66">type</span>:  name: stop_day value: 365]
+    [text:0x3fe12e13b3f8 <span style="color:#8a4b66">type</span>:  name: resolution value: 001]
+    [selectlist:0x3fe12e143be8 <span style="color:#8a4b66">type</span>:  name: object value: 04]
+    [selectlist:0x3fe12e161f6c <span style="color:#8a4b66">type</span>:  name: coordinate value: 1]
+    [selectlist:0x3fe12e161224 <span style="color:#8a4b66">type</span>:  name: equinox value: 2]
+    [selectlist:0x3fe12e165d74 <span style="color:#8a4b66">type</span>:  name: object2 value: ]}
+   {radiobuttons
+    [radiobutton:0x3fe12e1515b8 <span style="color:#8a4b66">type</span>: radio name: activity value: retrieve]
+    [radiobutton:0x3fe12e1511a8 <span style="color:#8a4b66">type</span>: radio name: activity value: ftp]
+    [radiobutton:0x3fe12e150b54 <span style="color:#8a4b66">type</span>: radio name: activity value: plot]
+    [radiobutton:0x3fe12e1504b0 <span style="color:#8a4b66">type</span>: radio name: activity value: plots]}
+   {checkboxes}
+   {file_uploads}
+   {buttons [submit:0x3fe12e13a96c <span style="color:#8a4b66">type</span>: submit name:  value: Submit Query]}>}>
+</pre>
+
+<p>This is the form section of the page. Looking at it we can see there is one form, with its name set to nil. Now, normally we would select the form by its name, but since the good people at NASA have declined to set one, we just say:</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">outer_space_form = page.form
+
+<span style="color:#473c45">##if there were a name for this form</span>
+outer_space_form = page.form(<span style="color:#805978">'name'</span>)
+</pre>
+
+<p>A lot of the values on this form are already set, but I want to reset some of them. First of all, I want to get data all the way up to 2017, so I’ll reset the stop year value field. Second, I want to select the XYZ coordinates from the radio button. And I want to get coordinates for Jupiter.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">outer_space_form.stop_year = <span style="color:#805978">'2015'</span>
+outer_space_form.radiobuttons_with(<span style="color:#a8885a">name:</span> <span style="color:#805978">'activity'</span>)[<span style="color:#a8885a">3</span>].check
+outer_space_form.field_with(<span style="color:#a8885a">name:</span> <span style="color:#805978">'object'</span>).options[<span style="color:#a8885a">11</span>].select
+
+</pre>
+
+<p>Now I want to submit this form, so I can get at all that sweet, sweet, space data.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">page = agent.submit(outer_space_form)
+</pre>
+
+Now, because NASA’s layout is special, we’re on a page where we have to click through to this link, and will have space data.
+
+<pre style="background:#0d0d0d;color:#dde6cf">page = agent.page.links.first.click
+</pre>
+<p>And… SPACE DATA!</p>
