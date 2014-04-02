@@ -1,0 +1,113 @@
+date: 2014-04-01
+
+
+<h3>Why is 3D Javascript so much easier than 2D Javascript?</h3>
+
+<p>That’s the question I’ve been asking myself this week. Javascript has never been my favorite language. It’s weird in its usage of scope, and the semicolons and curly brackets everywhere just give me more things to trip over. Usually when I have beef with Javascript, and ask “So, are there some advantages to having it set up this way, or is this just one of those things where it was written in 9 days and so this is what we’ve got?” the answer is the latter, which makes me feel justified.</p>
+
+<p>But I wanted 3D graphics in my browser. Animated 3D graphics. So I asked Google how to do that.</p>
+
+<p>“Javascript,” it said.</p>
+<p>“Really?”</p>
+<p>”Yup”</p>
+<p>”Okay, let’s do it.”</p>
+<p>Let it never be said that I shy away from things I want to do, just because they are hard.</p>
+<p>As it turned out, it wasn’t that hard. Let me give you the scoop on how to use Three.js to make some 3D orbiting planets.</p>
+
+<p>First, you have to require the Three.js library, which is an easy package for WGL (Web Graphic Library).</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">&lt;script src=<span style="color:#805978">"https://rawgithub.com/mrdoob/three.js/master/build/three.js"</span>>&lt;/script>
+</pre>
+
+<p>Then we have to make three objects: The scene, the camera, and the renderer.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">var scene = new <span style="color:#8a4b66">THREE</span>.<span style="color:#596380">Scene</span>();
+var camera = new <span style="color:#8a4b66">THREE</span>.<span style="color:#596380">PerspectiveCamera</span>( <span style="color:#a8885a">75</span>, window.innerWidth / window.innerHeight, <span style="color:#a8885a">0.1</span>, <span style="color:#a8885a">1000</span> );
+
+var renderer = new <span style="color:#8a4b66">THREE</span>.<span style="color:#596380">WebGLRenderer</span>();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+</pre>
+ 
+<p>The camera’s arguments are as follows: the width of the field of view, the ratio of the screen’s dimensions, and the near and far boundaries of what will be rendered. The scene itself is just a special case of a canvas object you may have used in other javascript projects to make 2D charts or graphs, one that knows how to render things in 3D. We also set the renderer’s size to the ratio of the screen’s dimensions</p>
+
+<p>Finally, we need to render the scene, so it appears. Chew on this little bit of code:</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf"><span style="color:#9ebf60">function</span> <span style="color:#6078bf">render</span>() {
+    requestAnimationFrame(render);
+    renderer.render(scene, camera);
+}
+render();
+</pre>
+
+<p>What does the renderer do? The renderer renders. Javascript, man.</p>
+
+<p>Next, let’s make a sun. Luckily, a sun is just a sphere, and Three.js is prepared for that. A sphere is a mesh, and it takes two arguments, first its shape, which we already know is a sphere, and second, it’s surface. There are three surface types, MeshLambertMaterial, MeshPhongMaterial, and MeshBasicMaterial. The first two are very similar. They have fancier shading, and look 3D, but they need a light source to decide how to be shaded, so they won’t show up now. Let’s use Basic for now.</p>
+
+<p>Then those arguments take arguments in turn. The sphere needs to know its radius and the number of segments that make it approximate a sphere, both horizontal and vertical. Play with those numbers a bit to get a feel for what they mean. The surface takes one argument, the hexadecimal color, with 0x before it. Here’s a sample with a yellow sun.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf"><span style="color:#9ebf60">var</span> <span style="color:#8a4b66">sun</span> = new <span style="color:#6078bf">THREE.Mesh</span>( 
+  new <span style="color:#6078bf">THREE.SphereGeometry</span>(<span style="color:#a8885a">1</span>,<span style="color:#a8885a">25</span>,<span style="color:#a8885a">25</span>),
+  new <span style="color:#6078bf">THREE.MeshBasicMaterial</span>( { 
+    color: <span style="color:#a8885a">0xffcc00</span> 
+  }));
+scene.<span style="color:#8a4b66">add</span>( <span style="color:#8a4b66">sun</span> );
+</pre>
+
+<p>Check it out in your browser. You should have a yellow sphere in a black field. But I promised you a planet, didn’t I?<p>
+<p>Make another sphere, blue and smaller, and this time let’s set its coordinates. We didn’t set coordinates for the sun, and so it’s at (0,0,0). We don’t want the earth in the sun, for general safety and visibility, so let’s set the position. We’ll set it the z value, the depth to -5, so the earth will be invisible, but hidden behind the sun instead of in it.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf"><span style="color:#9ebf60">var</span> earth = new <span style="color:#6078bf">THREE.Mesh</span>( 
+  new <span style="color:#6078bf">THREE.SphereGeometry</span>(.<span style="color:#a8885a">3</span>,<span style="color:#a8885a">10</span>,<span style="color:#a8885a">10</span>),
+  new <span style="color:#6078bf">THREE.MeshPhongMaterial</span>( { 
+    color: <span style="color:#a8885a">0x0077ff</span> 
+  }));
+scene.<span style="color:#8a4b66">add</span>( earth );
+
+earth.position.z = -<span style="color:#a8885a">5</span>
+</pre>
+
+<p>Luckily, if we move the camera up and rotate it down, we can change our view.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">camera.position.z = <span style="color:#a8885a">15</span>;
+camera.position.<span style="color:#8a4b66">y</span> = <span style="color:#a8885a">6</span>;
+camera.rotation.<span style="color:#8a4b66">x</span> = -.<span style="color:#a8885a">7</span>
+</pre>
+
+<p>There’s Earth! That little blue dot, that’s us. (Apologies to Carl Sagan)</p>
+
+<p>Now, let’s make it rotate. This is a little more math, but also teaches you about animation. To do this we’ll put some stuff in the render function.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">earth.position.z += <span style="color:#a8885a">0.05</span>
+</pre>
+
+<p>This will let increase the z value of the earth every time the scene renders. The earth will shoot through the sun and come toward us, then disappear forever. So, not great, but it is animated.</p>
+
+<p>Now, let’s fill it with math! The equation for a circle is x^2 + y^2 = r^2, so once we extract the x value from that it becomes the square root of r^2 - y^2. So let’s try that.</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf">mars.position.<span style="color:#8a4b66">x</span> = <span style="color:#8a4b66">Math</span>.<span style="color:#8a4b66">sqrt</span>(<span style="color:#a8885a">25</span> - (<span style="color:#8a4b66">Math</span>.<span style="color:#8a4b66">pow</span>(mars.position.z, <span style="color:#a8885a">2</span>)))
+</pre>
+
+ <p>Now we amusingly have half an orbit which happens once and disappears. Why? Well, because square roots are always positive, the planet is never going to go to the half of the orbit with the negative x values. And it happens only once because the z value increase forever, it never comes back into range for an acceptable x value again.</p>
+
+<p>To solve this problem, I created a variable I call the hemisphereSwitcher. It is a variable that tells the orbit when to switch directions in the circle it’s drawing. It starts initialized to -1, and then switches to 1 when the earth hits what should be either outermost point of its z coordinate, and back again, for all eternity. We want to use the switcher to change the direction the x coordinate goes, so it returns after reaching its apex. We also multiply the amount the z coordinate is changing by the switcher, so it decreases instead of increasing, then increases again once it hits the edge. So this is what the render function should look like:</p>
+
+<pre style="background:#0d0d0d;color:#dde6cf"><span style="color:#9ebf60">function</span> <span style="color:#6078bf">render</span>() {
+  requestAnimationFrame(render);
+
+  if (<span style="color:#8a4b66">Math</span>.<span style="color:#8a4b66">abs</span>(earth.position.z) >= <span style="color:#a8885a">5</span>) {
+    hemisphereSwitcher = - hemisphereSwitcher
+  } else {}
+    earth.position.z += hemisphereSwitcher * <span style="color:#a8885a">0.05</span>
+  if (<span style="color:#8a4b66">Math</span>.<span style="color:#8a4b66">abs</span>(earth.position.z) === <span style="color:#a8885a">5</span>) {
+    earth.position.<span style="color:#8a4b66">x</span> = <span style="color:#a8885a">0</span>
+    } else {
+      earth.position.<span style="color:#8a4b66">x</span> = hemisphereSwitcher * <span style="color:#8a4b66">Math</span>.<span style="color:#8a4b66">sqrt</span>(<span style="color:#a8885a">25</span> - (<span style="color:#8a4b66">Math</span>.<span style="color:#8a4b66">pow</span>(earth.position.z, <span style="color:#a8885a">2</span>)))
+  }
+
+  renderer.render(scene, camera);
+}
+render();
+</pre>
+
+<p>Yuck. Look at all those curly brackets. Just because I can make a cool 3D Javascript scene doesn’t mean I have to like them. Anyway, your planet should be orbiting successfully.</p>
