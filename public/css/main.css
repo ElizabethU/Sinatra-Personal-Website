@@ -7,10 +7,10 @@ body {
 h1 {
   text-align: left;
   size: 80px;
-  color: #FFE8F7;
+  color: #000000;
   padding: 30px;
   margin: 0;
-  text-shadow: 2px 2px 10px #000000, -2px -2px 10px #000000, 2px -2px 10px #000000, -2px 2px 10px #000000, 2px 2px 30px #000000, -2px -2px 30px #000000, 2px -2px 30px #000000, -2px 2px 30px #000000;
+  text-shadow: 2px 2px 10px #FFE8F7, -2px -2px 10px #FFE8F7, 2px -2px 10px #FFE8F7, -2px 2px 10px #FFE8F7, 2px 2px 30px #FFE8F7, -2px -2px 30px #FFE8F7, 2px -2px 30px #FFE8F7, -2px 2px 30px #FFE8F7;
 }
 
 .text-box {
