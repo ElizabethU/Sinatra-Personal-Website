@@ -5,7 +5,7 @@
 </head>
 <body>
   <% its_a_post = false if its_a_post.nil? %>
-  <h1>Elizabeth Uselton</h1>
+  <h1>#{ Elizabeth Uselton }</h1>
   <%= erb :menu %>
   <% post_data = yield %>
   <%= erb(:post_layout, :locals => {post: post_data}) if its_a_post %>
