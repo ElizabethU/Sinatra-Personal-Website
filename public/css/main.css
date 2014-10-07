@@ -11,11 +11,11 @@ h1 {
   color: #000000;
   padding: 20px;
   margin: 0;
-  text-shadow: 2px 2px 10px #823C85, -2px -2px 10px #823C85, 2px -2px 10px #823C85, -2px 2px 10px #823C85, 2px 2px 30px #823C85, -2px -2px 30px #823C85, 2px -2px 30px #823C85, -2px 2px 30px #823C85;
+  text-shadow: 2px 2px 10px #958EE8, -2px -2px 10px #958EE8, 2px -2px 10px #958EE8, -2px 2px 10px #958EE8, 2px 2px 30px #6358D6, -2px -2px 30px #6358D6, 2px -2px 30px #6358D6, -2px 2px 30px #6358D6;
 }
 
 .text-box {
-  background-color: #81BD7B;
+  background-color: #F4F7C6;
   size: 24px;
   width: 500px;
   padding: 30px;
@@ -30,14 +30,14 @@ ul {
 
 ul.outer-menu {
   font-size: 20px;
-  opacity: 0.8;
+  /*opacity: 0.8;*/
 }
 
 ul.outer-menu li {
   display: inline-block;
   position: relative;
   padding: 15px;
-  background-color: #FFFFFF;
+  background-color: #9B92F7;
   margin: 75px;
   font-size: 24px; /*Not working*/
   margin: 0px;
@@ -89,7 +89,7 @@ ul.outer-menu li:hover ul {
 
 .post_content {
   border-radius: 8px;
-  background-color: #81BD7B;
+  background-color: #F4F7C6;
   width: 800px;
   margin: 50px auto;
   padding: 30px;
