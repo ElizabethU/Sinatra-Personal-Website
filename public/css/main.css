@@ -1,20 +1,21 @@
 body {
   margin: 0;
   font-family: Sylfaen, Palatino Linotype, Book Antiqua, Palatino, serif;
-  background-color: #68CC8D;
+  background-color: #4B41B5;
 }
 
+/* Name */
 h1 {
   text-align: left;
   size: 80px;
   color: #000000;
-  padding: 30px;
+  padding: 20px;
   margin: 0;
-  text-shadow: 2px 2px 10px #FFE8F7, -2px -2px 10px #FFE8F7, 2px -2px 10px #FFE8F7, -2px 2px 10px #FFE8F7, 2px 2px 30px #FFE8F7, -2px -2px 30px #FFE8F7, 2px -2px 30px #FFE8F7, -2px 2px 30px #FFE8F7;
+  text-shadow: 2px 2px 10px #823C85, -2px -2px 10px #823C85, 2px -2px 10px #823C85, -2px 2px 10px #823C85, 2px 2px 30px #823C85, -2px -2px 30px #823C85, 2px -2px 30px #823C85, -2px 2px 30px #823C85;
 }
 
 .text-box {
-  background-color: #FFE8F7;
+  background-color: #81BD7B;
   size: 24px;
   width: 500px;
   padding: 30px;
@@ -23,34 +24,32 @@ h1 {
   border-radius: 8px;
 }
 
-ul.outer-menu {
-  margin: 0;
-  color: #000000;
-  font-size: 20px;
-  opacity: 0.9;
+ul {
   list-style-type: none;
+}
+
+ul.outer-menu {
+  font-size: 20px;
+  opacity: 0.8;
 }
 
 ul.outer-menu li {
   display: inline-block;
   position: relative;
-  padding-left: 100px;
+  padding: 15px;
+  background-color: #FFFFFF;
+  margin: 75px;
   font-size: 24px; /*Not working*/
   margin: 0px;
-}
-
-ul.outer-menu, ul.outer-menu ul {
-  padding: 0;
-  margin: 0;
-  background-color: #FFE8F7;
+  border-radius: 8px;
 }
 
 ul.outer-menu ul.dropdown {
   display: none;
   position: absolute;
-  background-color: #FFE8F7;
-  padding-left: -30px;
-  left: 75px;
+  background-color: #81BD7B;
+  padding-left: -0px;
+  left: 0px;
 }
 
 ul.outer-menu ul.dropdown li {
@@ -59,12 +58,9 @@ ul.outer-menu ul.dropdown li {
   padding: 5px;
   font-size: 14px; /*Not working*/
   vertical-align: middle; /*not working*/
+  list-style-type: none;
+  border-radius: 0px;
 }
-
-/*ul.outer-menu ul.dropdown li:hover {
-  background-color: #FFFFFF;
-  opacity 0.9;
-}*/
 
 ul.outer-menu li:hover ul {
   display: block;
@@ -78,20 +74,22 @@ ul.outer-menu li:hover ul {
 
 .button {
   clear: both;
-  width: 125px;
   height: 80px;
   position: relative;
   padding: 10px;
-  vertical-align: middle; /*not working*/
   text-align: center;
   font-weight: bold;
   font-size: 16px;
   text-transform: capitalize;
 }
 
+.blog-link-box {
+  height: 40px;
+}
+
 .post_content {
   border-radius: 8px;
-  background-color: #FFE8F7;
+  background-color: #81BD7B;
   width: 800px;
   margin: 50px auto;
   padding: 30px;

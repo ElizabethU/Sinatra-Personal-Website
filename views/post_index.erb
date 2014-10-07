@@ -1,0 +1,8 @@
+
+<div class="text-box">
+  <ul>
+    <% @sorted_posts.each do |post, date_array| %>
+      <li class="blog-link-box"><a href="/blog/<%= post %>"><%= post.gsub(/-/, ' ').capitalize %></a></li>
+    <% end %>
+  </ul>
+</div>

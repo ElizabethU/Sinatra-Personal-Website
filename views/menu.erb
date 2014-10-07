@@ -1,11 +1,7 @@
   <ul class="outer-menu">
-    <li>Ada Blog
-      <ul class="dropdown">
-        <% @sorted_posts.each do |post, date_array| %>
-        <li class="button"><a href="/blog/<%= post %>"><%= post.gsub(/-/, ' ') %></a></li>
-      <% end %>
-      </ul>
-    </li>
+    <li>Ada Blog</li>
+    <li>Resume</li>
+    <li>About Me</li>
     <li>Projects
       <ul class="dropdown">
         <div class="floater">
